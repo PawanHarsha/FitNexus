@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FitNexus Global</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <script>
       tailwind.config = {
         theme: {
@@ -46,6 +47,11 @@
       }
       ::-webkit-scrollbar-thumb:hover {
         background: #3f3f46; 
+      }
+      /* Google Button Alignment */
+      #google-login-btn {
+        display: flex;
+        justify-content: center;
       }
     </style>
   <script type="importmap">

@@ -4,7 +4,16 @@ export enum View {
   BOOKING = 'BOOKING',
   HOME_GYM = 'HOME_GYM',
   ASSISTANT = 'ASSISTANT',
-  DASHBOARD = 'DASHBOARD'
+  DASHBOARD = 'DASHBOARD',
+  PROFILE = 'PROFILE'
+}
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  picture: string;
+  joinedDate: string;
 }
 
 export interface Product {
