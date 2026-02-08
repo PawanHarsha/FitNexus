@@ -1,42 +1,70 @@
 import { GoogleGenAI, Chat, GenerateContentResponse } from "@google/genai";
+import { Product, Gym, Package, WorkoutData } from "../types";
 
-let chatSession: Chat | null = null;
+const BASE_API_URL = 'http://10.138.193.232:8052/api';
 
 const getAIClient = () => {
   return new GoogleGenAI({ apiKey: process.env.API_KEY });
 };
 
+let chatSession: Chat | null = null;
+
 export const initializeChat = (): Chat => {
   const ai = getAIClient();
   chatSession = ai.chats.create({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-3-flash-preview',
     config: {
       systemInstruction: `You are NexusCoach, an elite AI fitness assistant for the FitNexus platform. 
-      Your goal is to help users with:
-      1. Selecting the right gym equipment from our marketplace.
-      2. Creating workout plans (Home or Gym).
-      3. Advising on nutrition and supplements.
-      4. Explaining exercises.
-      
-      Keep answers concise, motivating, and action-oriented. Use emojis occasionally. 
-      If the user asks about specific products, recommend general categories available in a typical fitness store unless they ask for something specific found in our mock database.
-      
-      FitNexus has 3 main areas: Marketplace, Booking (Pay here gym everywhere), and Home Gym setup. You can guide them to these sections.`,
+      Your goal is to help users with fitness advice. Keep answers concise, motivating, and action-oriented.`,
     },
   });
   return chatSession;
 };
 
 export const sendMessageToGemini = async (message: string): Promise<string> => {
-  if (!chatSession) {
-    initializeChat();
-  }
-  
+  if (!chatSession) initializeChat();
   try {
     const response: GenerateContentResponse = await chatSession!.sendMessage({ message });
-    return response.text || "I'm having trouble connecting to the fitness mainframe. Try again!";
+    return response.text || "Mainframe error.";
   } catch (error) {
     console.error("Gemini API Error:", error);
-    return "Sorry, I encountered an error processing your request. Please check your connection.";
+    return "Error processing request.";
   }
+};
+
+/**
+ * BACKEND API CALLS
+ */
+
+const handleFetch = async (endpoint: string) => {
+  try {
+    const response = await fetch(`${BASE_API_URL}${endpoint}`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    if (!response.ok) throw new Error('API Unavailable');
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(`API Fetch Error (${endpoint}):`, error);
+    return null;
+  }
+};
+
+export const fetchProducts = async (category: string = 'All'): Promise<Product[] | null> => {
+  const query = category !== 'All' ? `?category=${category}` : '';
+  return handleFetch(`/products${query}`);
+};
+
+export const fetchGyms = async (search: string = ''): Promise<Gym[] | null> => {
+  const query = search ? `?q=${search}` : '';
+  return handleFetch(`/gyms${query}`);
+};
+
+export const fetchPackages = async (): Promise<Package[] | null> => {
+  return handleFetch(`/packages`);
+};
+
+export const fetchDashboardData = async (): Promise<WorkoutData[] | null> => {
+  return handleFetch(`/dashboard`);
 };
