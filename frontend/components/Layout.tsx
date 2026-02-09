@@ -46,7 +46,7 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, setCurrentView, car
             </div>
             
             <div className="hidden lg:block">
-              <div className="ml-10 flex items-baseline space-x-2">
+              <div className="ml-10 flex items-baseline space-x-1">
                 {navItems.map((item) => (
                   <button
                     key={item.id}
@@ -60,10 +60,12 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, setCurrentView, car
                     }`}
                   >
                     {item.icon}
-                    <span className="whitespace-nowrap">{item.label}</span>
-                    {item.protected && (
-                      <Crown size={12} className="text-nexus-primary" fill="currentColor" />
-                    )}
+                    <span className="flex items-center gap-1.5 whitespace-nowrap">
+                      {item.label}
+                      {item.protected && (
+                        <Crown size={12} className="text-nexus-primary" fill="currentColor" />
+                      )}
+                    </span>
                     {item.id === View.MARKETPLACE && cartCount > 0 && (
                       <span className="absolute -top-1 -right-1 bg-nexus-primary text-nexus-black text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full border border-nexus-black">
                         {cartCount}
@@ -92,23 +94,23 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, setCurrentView, car
                   </button>
                   
                   {isProfileOpen && (
-                    <div className="absolute right-0 mt-2 w-48 bg-nexus-dark border border-nexus-gray rounded-xl shadow-xl py-2 z-50">
+                    <div className="absolute right-0 mt-2 w-52 bg-nexus-dark border border-nexus-gray rounded-xl shadow-xl py-2 z-50 animate-in fade-in zoom-in duration-200 origin-top-right">
                       <div className="px-4 py-2 border-b border-nexus-gray mb-1">
-                        <p className="text-xs text-nexus-muted uppercase font-bold tracking-wider">Account</p>
-                        <p className="text-sm font-semibold truncate text-white flex items-center gap-2">
+                        <p className="text-[10px] text-nexus-muted uppercase font-black tracking-[0.2em] mb-1">Nexus ID</p>
+                        <p className="text-sm font-bold truncate text-white flex items-center gap-2">
                           {user.name}
                           {user.isPro && <Crown size={12} className="text-nexus-primary" fill="currentColor" />}
                         </p>
                       </div>
                       <button 
                         onClick={() => { setCurrentView(View.PROFILE); setIsProfileOpen(false); }}
-                        className="w-full text-left px-4 py-2 text-sm text-nexus-text hover:bg-nexus-gray flex items-center gap-2"
+                        className="w-full text-left px-4 py-2 text-sm text-nexus-text hover:bg-nexus-gray flex items-center gap-2 transition-colors"
                       >
                         <UserIcon size={14} /> Profile
                       </button>
                       <button 
                         onClick={() => { onLogout(); setIsProfileOpen(false); }}
-                        className="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-nexus-gray flex items-center gap-2"
+                        className="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-nexus-gray flex items-center gap-2 transition-colors"
                       >
                         <LogOut size={14} /> Logout
                       </button>
@@ -158,10 +160,12 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, setCurrentView, car
                 >
                   <div className="flex items-center gap-3 w-full">
                     {item.icon}
-                    {item.label}
-                    {item.protected && (
-                      <Crown size={14} className="text-nexus-primary" fill="currentColor" />
-                    )}
+                    <span className="flex items-center gap-2">
+                      {item.label}
+                      {item.protected && (
+                        <Crown size={14} className="text-nexus-primary" fill="currentColor" />
+                      )}
+                    </span>
                     {item.id === View.MARKETPLACE && cartCount > 0 && (
                       <span className="ml-auto bg-nexus-primary text-nexus-black text-xs font-bold px-2 py-0.5 rounded-full">
                         {cartCount}

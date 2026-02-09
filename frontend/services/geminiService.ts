@@ -1,7 +1,8 @@
 import { GoogleGenAI, Chat, GenerateContentResponse } from "@google/genai";
 import { Product, Gym, Package, WorkoutData } from "../types";
 
-const BASE_API_URL = 'http://10.138.193.232:8052/api';
+// Update to point to the Django backend
+const BASE_API_URL = 'http://localhost:8000/api';
 
 const getAIClient = () => {
   return new GoogleGenAI({ apiKey: process.env.API_KEY });
@@ -53,18 +54,18 @@ const handleFetch = async (endpoint: string) => {
 
 export const fetchProducts = async (category: string = 'All'): Promise<Product[] | null> => {
   const query = category !== 'All' ? `?category=${category}` : '';
-  return handleFetch(`/products${query}`);
+  return handleFetch(`/products/${query}`);
 };
 
 export const fetchGyms = async (search: string = ''): Promise<Gym[] | null> => {
-  const query = search ? `?q=${search}` : '';
-  return handleFetch(`/gyms${query}`);
+  const query = search ? `?search=${search}` : '';
+  return handleFetch(`/gyms/${query}`);
 };
 
 export const fetchPackages = async (): Promise<Package[] | null> => {
-  return handleFetch(`/packages`);
+  return handleFetch(`/packages/`);
 };
 
 export const fetchDashboardData = async (): Promise<WorkoutData[] | null> => {
-  return handleFetch(`/dashboard`);
+  return handleFetch(`/dashboard/`);
 };
