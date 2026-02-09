@@ -1,6 +1,6 @@
 import React from 'react';
 import { User } from '../types';
-import { Shield, Mail, Calendar, Settings, Award, History } from 'lucide-react';
+import { Shield, Mail, Calendar, Settings, Award, History, Phone, User as UserIcon } from 'lucide-react';
 
 interface ProfileProps {
   user: User | null;
@@ -22,7 +22,7 @@ export const Profile: React.FC<ProfileProps> = ({ user }) => {
               alt={user.name} 
               className="w-32 h-32 rounded-full border-4 border-nexus-black shadow-lg"
             />
-            <h2 className="text-3xl font-bold text-white mt-4">{user.name}</h2>
+            <h2 className="text-3xl font-bold text-white mt-4 uppercase italic tracking-tighter">{user.name}</h2>
             <div className="flex items-center gap-2 text-nexus-muted text-sm mt-1">
               <Mail size={14} /> {user.email}
             </div>
@@ -32,20 +32,24 @@ export const Profile: React.FC<ProfileProps> = ({ user }) => {
             <div className="space-y-6">
               <div className="bg-nexus-black p-4 rounded-xl border border-nexus-gray">
                 <h3 className="text-nexus-primary font-bold text-sm uppercase tracking-wider mb-4 flex items-center gap-2">
-                  <Shield size={16} /> Member Info
+                  <Shield size={16} /> Member Vitals
                 </h3>
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
-                    <span className="text-nexus-muted text-sm">Member Since</span>
-                    <span className="text-white text-sm flex items-center gap-2"><Calendar size={14} /> {user.joinedDate}</span>
+                    <span className="text-nexus-muted text-sm">Joined Nexus</span>
+                    <span className="text-white text-sm flex items-center gap-2 font-mono">{user.joinedDate}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-nexus-muted text-sm">Account Status</span>
-                    <span className="text-nexus-primary text-xs font-bold px-2 py-1 bg-nexus-primary/10 rounded">ELITE PRO</span>
+                    <span className="text-nexus-muted text-sm">Contact</span>
+                    <span className="text-white text-sm flex items-center gap-2 font-mono"><Phone size={14} /> {user.phone || 'Not set'}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-nexus-muted text-sm">Global Pass</span>
-                    <span className="text-green-400 text-sm">Active</span>
+                    <span className="text-nexus-muted text-sm">Age / Sex</span>
+                    <span className="text-white text-sm flex items-center gap-2 font-mono"><UserIcon size={14} /> {user.age || '??'} / {user.sex || '??'}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-nexus-muted text-sm">Account Tier</span>
+                    <span className="text-nexus-primary text-[10px] font-black px-2 py-0.5 bg-nexus-primary/10 rounded uppercase tracking-widest border border-nexus-primary/20">ELITE PRO</span>
                   </div>
                 </div>
               </div>
@@ -56,7 +60,7 @@ export const Profile: React.FC<ProfileProps> = ({ user }) => {
                 </h3>
                 <div className="flex flex-wrap gap-3">
                   {['Consistency King', 'Early Bird', '1000lb Club', 'Nexus OG'].map((badge) => (
-                    <span key={badge} className="px-3 py-1 bg-nexus-gray text-white text-xs rounded-full border border-nexus-gray/50">
+                    <span key={badge} className="px-3 py-1 bg-nexus-gray text-white text-[10px] rounded-full border border-nexus-gray/50 uppercase font-bold tracking-widest">
                       {badge}
                     </span>
                   ))}
@@ -67,24 +71,24 @@ export const Profile: React.FC<ProfileProps> = ({ user }) => {
             <div className="space-y-6">
               <div className="bg-nexus-black p-4 rounded-xl border border-nexus-gray">
                 <h3 className="text-nexus-primary font-bold text-sm uppercase tracking-wider mb-4 flex items-center gap-2">
-                  <History size={16} /> Recent Activity
+                  <History size={16} /> Nexus Logs
                 </h3>
                 <div className="space-y-4">
                   {[
+                    { act: 'Profile Initialized', loc: 'Mainframe', time: 'Just now' },
                     { act: 'Gym Session', loc: 'Iron Paradise NYC', time: '2 hours ago' },
-                    { act: 'Marketplace Purchase', loc: 'Nitro Whey Gold', time: 'Yesterday' },
                     { act: 'AI Consultation', loc: 'Custom Leg Plan', time: '2 days ago' },
                   ].map((item, idx) => (
                     <div key={idx} className="border-l-2 border-nexus-gray pl-4 py-1">
-                      <p className="text-white text-sm font-semibold">{item.act}</p>
-                      <p className="text-nexus-muted text-xs">{item.loc} • {item.time}</p>
+                      <p className="text-white text-sm font-semibold italic">{item.act}</p>
+                      <p className="text-nexus-muted text-xs uppercase tracking-tighter">{item.loc} • {item.time}</p>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <button className="w-full bg-nexus-gray hover:bg-nexus-text hover:text-nexus-black text-white font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-2">
-                <Settings size={18} /> Account Settings
+              <button className="w-full bg-nexus-gray hover:bg-white hover:text-nexus-black text-white font-black py-4 rounded-xl transition-all flex items-center justify-center gap-2 uppercase tracking-widest text-xs">
+                <Settings size={18} /> Modify Settings
               </button>
             </div>
           </div>

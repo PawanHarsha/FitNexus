@@ -26,8 +26,8 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, setCurrentView, car
 
   const handleNavClick = (viewId: View, isProtected: boolean) => {
     if (isProtected && !user) {
-      setCurrentView(View.HOME);
-      // Alert or trigger login flow
+      setCurrentView(View.LOGIN);
+      setIsMobileMenuOpen(false);
       return;
     }
     setCurrentView(viewId);
@@ -104,8 +104,12 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, setCurrentView, car
                 </div>
               ) : (
                 <button 
-                  onClick={() => setCurrentView(View.HOME)}
-                  className="text-sm font-bold bg-nexus-primary text-nexus-black px-4 py-2 rounded-lg hover:bg-nexus-primaryHover transition-colors"
+                  onClick={() => setCurrentView(View.LOGIN)}
+                  className={`text-sm font-bold px-4 py-2 rounded-lg transition-colors ${
+                    currentView === View.LOGIN 
+                      ? 'bg-nexus-gray text-nexus-primary border border-nexus-primary' 
+                      : 'bg-nexus-primary text-nexus-black hover:bg-nexus-primaryHover'
+                  }`}
                 >
                   Login
                 </button>

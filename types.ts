@@ -5,7 +5,9 @@ export enum View {
   HOME_GYM = 'HOME_GYM',
   ASSISTANT = 'ASSISTANT',
   DASHBOARD = 'DASHBOARD',
-  PROFILE = 'PROFILE'
+  PROFILE = 'PROFILE',
+  LOGIN = 'LOGIN',
+  PROFILE_COMPLETION = 'PROFILE_COMPLETION'
 }
 
 export interface User {
@@ -14,6 +16,10 @@ export interface User {
   email: string;
   picture: string;
   joinedDate: string;
+  phone?: string;
+  age?: number;
+  sex?: 'Male' | 'Female' | 'Other';
+  isProfileComplete: boolean;
 }
 
 export interface Product {
