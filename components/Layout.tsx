@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, User } from '../types';
-import { Menu, X, ShoppingBag, Dumbbell, MapPin, Home as HomeIcon, Bot, Activity, User as UserIcon, LogOut } from 'lucide-react';
+import { Menu, X, ShoppingBag, Dumbbell, MapPin, Home as HomeIcon, Bot, Activity, User as UserIcon, LogOut, Crown } from 'lucide-react';
 
 interface LayoutProps {
   currentView: View;
@@ -16,20 +16,15 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, setCurrentView, car
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   const navItems = [
-    { id: View.HOME, label: 'Home', icon: <HomeIcon size={18} />, protected: false },
-    { id: View.MARKETPLACE, label: 'Shop', icon: <ShoppingBag size={18} />, protected: false },
-    { id: View.BOOKING, label: 'Book Gym', icon: <MapPin size={18} />, protected: false },
-    { id: View.HOME_GYM, label: 'Build Gym', icon: <Dumbbell size={18} />, protected: false },
-    { id: View.DASHBOARD, label: 'My Progress', icon: <Activity size={18} />, protected: true },
-    { id: View.ASSISTANT, label: 'AI Coach', icon: <Bot size={18} />, protected: true },
+    { id: View.HOME, label: 'Home', icon: <HomeIcon size={18} />, pro: false },
+    { id: View.MARKETPLACE, label: 'Shop', icon: <ShoppingBag size={18} />, pro: false },
+    { id: View.BOOKING, label: 'Book Gym', icon: <MapPin size={18} />, pro: false },
+    { id: View.HOME_GYM, label: 'Build Gym', icon: <Dumbbell size={18} />, pro: false },
+    { id: View.DASHBOARD, label: 'Progress', icon: <Activity size={18} />, pro: true },
+    { id: View.ASSISTANT, label: 'AI Coach', icon: <Bot size={18} />, pro: true },
   ];
 
-  const handleNavClick = (viewId: View, isProtected: boolean) => {
-    if (isProtected && !user) {
-      setCurrentView(View.LOGIN);
-      setIsMobileMenuOpen(false);
-      return;
-    }
+  const handleNavClick = (viewId: View) => {
     setCurrentView(viewId);
     setIsMobileMenuOpen(false);
   };
@@ -40,7 +35,7 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, setCurrentView, car
       <nav className="sticky top-0 z-50 bg-nexus-black/95 border-b border-nexus-gray backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-2 cursor-pointer" onClick={() => setCurrentView(View.HOME)}>
+            <div className="flex items-center gap-2 cursor-pointer" onClick={() => handleNavClick(View.HOME)}>
               <div className="w-8 h-8 bg-nexus-primary rounded-lg flex items-center justify-center text-nexus-black font-bold text-xl">N</div>
               <span className="font-bold text-xl tracking-tight">FitNexus</span>
             </div>
@@ -50,17 +45,18 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, setCurrentView, car
                 {navItems.map((item) => (
                   <button
                     key={item.id}
-                    onClick={() => handleNavClick(item.id, item.protected)}
+                    onClick={() => handleNavClick(item.id)}
                     className={`relative flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
                       currentView === item.id
                         ? 'bg-nexus-gray text-nexus-primary'
-                        : item.protected && !user 
-                          ? 'text-nexus-muted opacity-50 cursor-not-allowed'
-                          : 'text-nexus-muted hover:text-white hover:bg-nexus-gray'
+                        : 'text-nexus-muted hover:text-white hover:bg-nexus-gray'
                     }`}
                   >
                     {item.icon}
                     {item.label}
+                    {item.pro && (
+                      <Crown size={10} className="text-nexus-primary" />
+                    )}
                     {item.id === View.MARKETPLACE && cartCount > 0 && (
                       <span className="absolute -top-1 -right-1 bg-nexus-primary text-nexus-black text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-nexus-black">
                         {cartCount}
@@ -78,13 +74,23 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, setCurrentView, car
                     onClick={() => setIsProfileOpen(!isProfileOpen)}
                     className="flex items-center gap-2 focus:outline-none"
                   >
-                    <img src={user.picture} alt={user.name} className="w-8 h-8 rounded-full border border-nexus-gray" />
+                    <div className="relative">
+                      <img src={user.picture} alt={user.name} className={`w-8 h-8 rounded-full border ${user.isPro ? 'border-nexus-primary' : 'border-nexus-gray'}`} />
+                      {user.isPro && (
+                        <div className="absolute -top-1 -right-1 bg-nexus-primary rounded-full p-0.5 border border-nexus-black">
+                          <Crown size={8} className="text-nexus-black" />
+                        </div>
+                      )}
+                    </div>
                   </button>
                   
                   {isProfileOpen && (
                     <div className="absolute right-0 mt-2 w-48 bg-nexus-dark border border-nexus-gray rounded-xl shadow-xl py-2 z-50">
                       <div className="px-4 py-2 border-b border-nexus-gray mb-1">
-                        <p className="text-xs text-nexus-muted uppercase font-bold tracking-wider">Account</p>
+                        <div className="flex items-center gap-1">
+                          <p className="text-xs text-nexus-muted uppercase font-bold tracking-wider">Account</p>
+                          {user.isPro && <span className="text-[8px] bg-nexus-primary text-nexus-black px-1 rounded-sm font-black">PRO</span>}
+                        </div>
                         <p className="text-sm font-semibold truncate text-white">{user.name}</p>
                       </div>
                       <button 
@@ -134,18 +140,17 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, setCurrentView, car
               {navItems.map((item) => (
                 <button
                   key={item.id}
-                  onClick={() => handleNavClick(item.id, item.protected)}
+                  onClick={() => handleNavClick(item.id)}
                   className={`flex items-center gap-3 w-full px-3 py-3 rounded-md text-base font-medium ${
                     currentView === item.id
                       ? 'bg-nexus-gray text-nexus-primary'
-                      : item.protected && !user 
-                        ? 'text-nexus-muted opacity-50 cursor-not-allowed'
-                        : 'text-nexus-muted hover:text-white hover:bg-nexus-gray'
+                      : 'text-nexus-muted hover:text-white hover:bg-nexus-gray'
                   }`}
                 >
                   <div className="flex items-center gap-3 w-full">
                     {item.icon}
                     {item.label}
+                    {item.pro && <Crown size={12} className="text-nexus-primary" />}
                     {item.id === View.MARKETPLACE && cartCount > 0 && (
                       <span className="ml-auto bg-nexus-primary text-nexus-black text-xs font-bold px-2 py-0.5 rounded-full">
                         {cartCount}

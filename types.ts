@@ -20,6 +20,8 @@ export interface User {
   age?: number;
   sex?: 'Male' | 'Female' | 'Other';
   isProfileComplete: boolean;
+  isPro: boolean;
+  isPhoneVerified: boolean;
 }
 
 export interface Product {
