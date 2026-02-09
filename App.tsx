@@ -11,6 +11,7 @@ import { Login } from './views/Login';
 import { ProfileCompletion } from './views/ProfileCompletion';
 import { Subscription } from './views/Subscription';
 import { View, User } from './types';
+import { Crown, Sparkles, Lock } from 'lucide-react';
 
 // Mock Client ID - In production, this would be your actual Google Client ID
 const GOOGLE_CLIENT_ID = "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com";
@@ -105,12 +106,13 @@ function App() {
   };
 
   const renderView = () => {
+    // 1. Check for basic login protection
     const isProtected = currentView === View.ASSISTANT || currentView === View.DASHBOARD || currentView === View.PROFILE;
     if (isProtected && !user) {
       return (
         <div className="flex flex-col items-center justify-center min-h-[60vh] px-4 text-center animate-in fade-in zoom-in duration-500">
           <div className="w-20 h-20 bg-nexus-gray rounded-full flex items-center justify-center mb-6 text-nexus-primary shadow-xl shadow-nexus-primary/10">
-            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <Lock size={32} />
           </div>
           <h2 className="text-4xl font-black text-white mb-2 uppercase italic tracking-tighter">Exclusive Territory</h2>
           <p className="text-nexus-muted max-w-md mb-8">
@@ -122,6 +124,41 @@ function App() {
           >
             Authenticate Now
           </button>
+        </div>
+      );
+    }
+
+    // 2. Check for Pro/Elite protection specifically for Dashboard and Assistant
+    const isProRequired = currentView === View.ASSISTANT || currentView === View.DASHBOARD;
+    if (isProRequired && user && !user.isPro) {
+      return (
+        <div className="flex flex-col items-center justify-center min-h-[60vh] px-4 text-center animate-in fade-in slide-in-from-bottom-4 duration-700">
+          <div className="relative mb-8">
+            <div className="w-24 h-24 bg-nexus-primary/10 rounded-3xl flex items-center justify-center text-nexus-primary border border-nexus-primary/20 animate-pulse">
+              <Crown size={48} />
+            </div>
+            <div className="absolute -top-2 -right-2 bg-nexus-black p-1.5 rounded-full border border-nexus-primary/50 text-nexus-primary">
+              <Sparkles size={16} />
+            </div>
+          </div>
+          <h2 className="text-4xl font-black text-white mb-2 uppercase italic tracking-tighter">Pro Level Required</h2>
+          <p className="text-nexus-muted max-w-lg mb-10 leading-relaxed">
+            AI-powered coaching and advanced biometric tracking are <span className="text-white font-bold">Nexus Pro</span> exclusive features. Upgrade your membership to unlock the full potential of the mainframe.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <button 
+              onClick={() => setCurrentView(View.SUBSCRIPTION)}
+              className="bg-nexus-primary text-nexus-black px-10 py-4 rounded-xl font-black uppercase tracking-widest hover:bg-white transition-all shadow-[0_10px_40px_rgba(163,230,53,0.2)] flex items-center gap-2"
+            >
+              See Pro Plans <Crown size={18} />
+            </button>
+            <button 
+              onClick={() => setCurrentView(View.HOME)}
+              className="bg-nexus-gray text-nexus-text px-10 py-4 rounded-xl font-black uppercase tracking-widest hover:bg-white hover:text-nexus-black transition-all"
+            >
+              Return to Base
+            </button>
+          </div>
         </div>
       );
     }

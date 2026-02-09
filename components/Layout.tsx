@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, User } from '../types';
-import { Menu, X, ShoppingBag, Dumbbell, MapPin, Home as HomeIcon, Bot, Activity, User as UserIcon, LogOut } from 'lucide-react';
+import { Menu, X, ShoppingBag, Dumbbell, MapPin, Home as HomeIcon, Bot, Activity, User as UserIcon, LogOut, Crown } from 'lucide-react';
 
 interface LayoutProps {
   currentView: View;
@@ -45,8 +45,8 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, setCurrentView, car
               <span className="font-bold text-xl tracking-tight">FitNexus</span>
             </div>
             
-            <div className="hidden md:block">
-              <div className="ml-10 flex items-baseline space-x-4">
+            <div className="hidden lg:block">
+              <div className="ml-10 flex items-baseline space-x-2">
                 {navItems.map((item) => (
                   <button
                     key={item.id}
@@ -55,14 +55,17 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, setCurrentView, car
                       currentView === item.id
                         ? 'bg-nexus-gray text-nexus-primary'
                         : item.protected && !user 
-                          ? 'text-nexus-muted opacity-50 cursor-not-allowed'
+                          ? 'text-nexus-muted/50 hover:text-white hover:bg-nexus-gray'
                           : 'text-nexus-muted hover:text-white hover:bg-nexus-gray'
                     }`}
                   >
                     {item.icon}
-                    {item.label}
+                    <span className="whitespace-nowrap">{item.label}</span>
+                    {item.protected && (
+                      <Crown size={12} className="text-nexus-primary" fill="currentColor" />
+                    )}
                     {item.id === View.MARKETPLACE && cartCount > 0 && (
-                      <span className="absolute -top-1 -right-1 bg-nexus-primary text-nexus-black text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-nexus-black">
+                      <span className="absolute -top-1 -right-1 bg-nexus-primary text-nexus-black text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full border border-nexus-black">
                         {cartCount}
                       </span>
                     )}
@@ -78,14 +81,24 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, setCurrentView, car
                     onClick={() => setIsProfileOpen(!isProfileOpen)}
                     className="flex items-center gap-2 focus:outline-none"
                   >
-                    <img src={user.picture} alt={user.name} className="w-8 h-8 rounded-full border border-nexus-gray" />
+                    <div className="relative">
+                      <img src={user.picture} alt={user.name} className={`w-8 h-8 rounded-full border ${user.isPro ? 'border-nexus-primary' : 'border-nexus-gray'}`} />
+                      {user.isPro && (
+                        <div className="absolute -top-1 -right-1 bg-nexus-primary text-nexus-black p-0.5 rounded-full shadow-sm">
+                          <Crown size={8} fill="currentColor" />
+                        </div>
+                      )}
+                    </div>
                   </button>
                   
                   {isProfileOpen && (
                     <div className="absolute right-0 mt-2 w-48 bg-nexus-dark border border-nexus-gray rounded-xl shadow-xl py-2 z-50">
                       <div className="px-4 py-2 border-b border-nexus-gray mb-1">
                         <p className="text-xs text-nexus-muted uppercase font-bold tracking-wider">Account</p>
-                        <p className="text-sm font-semibold truncate text-white">{user.name}</p>
+                        <p className="text-sm font-semibold truncate text-white flex items-center gap-2">
+                          {user.name}
+                          {user.isPro && <Crown size={12} className="text-nexus-primary" fill="currentColor" />}
+                        </p>
                       </div>
                       <button 
                         onClick={() => { setCurrentView(View.PROFILE); setIsProfileOpen(false); }}
@@ -115,7 +128,7 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, setCurrentView, car
                 </button>
               )}
 
-              <div className="-mr-2 flex md:hidden">
+              <div className="-mr-2 flex lg:hidden">
                 <button
                   onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                   className="inline-flex items-center justify-center p-2 rounded-md text-nexus-muted hover:text-white hover:bg-nexus-gray focus:outline-none"
@@ -129,7 +142,7 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, setCurrentView, car
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden border-b border-nexus-gray bg-nexus-black">
+          <div className="lg:hidden border-b border-nexus-gray bg-nexus-black">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
               {navItems.map((item) => (
                 <button
@@ -139,13 +152,16 @@ export const Layout: React.FC<LayoutProps> = ({ currentView, setCurrentView, car
                     currentView === item.id
                       ? 'bg-nexus-gray text-nexus-primary'
                       : item.protected && !user 
-                        ? 'text-nexus-muted opacity-50 cursor-not-allowed'
+                        ? 'text-nexus-muted hover:text-white hover:bg-nexus-gray'
                         : 'text-nexus-muted hover:text-white hover:bg-nexus-gray'
                   }`}
                 >
                   <div className="flex items-center gap-3 w-full">
                     {item.icon}
                     {item.label}
+                    {item.protected && (
+                      <Crown size={14} className="text-nexus-primary" fill="currentColor" />
+                    )}
                     {item.id === View.MARKETPLACE && cartCount > 0 && (
                       <span className="ml-auto bg-nexus-primary text-nexus-black text-xs font-bold px-2 py-0.5 rounded-full">
                         {cartCount}
