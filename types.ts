@@ -7,7 +7,8 @@ export enum View {
   DASHBOARD = 'DASHBOARD',
   PROFILE = 'PROFILE',
   LOGIN = 'LOGIN',
-  PROFILE_COMPLETION = 'PROFILE_COMPLETION'
+  PROFILE_COMPLETION = 'PROFILE_COMPLETION',
+  SUBSCRIPTION = 'SUBSCRIPTION'
 }
 
 export interface User {
@@ -20,8 +21,7 @@ export interface User {
   age?: number;
   sex?: 'Male' | 'Female' | 'Other';
   isProfileComplete: boolean;
-  isPro: boolean;
-  isPhoneVerified: boolean;
+  isPro?: boolean;
 }
 
 export interface Product {

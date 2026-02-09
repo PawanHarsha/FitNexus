@@ -23,9 +23,7 @@ export const ProfileCompletion: React.FC<ProfileCompletionProps> = ({ user, onCo
       phone: formData.phone,
       age: parseInt(formData.age),
       sex: formData.sex,
-      isProfileComplete: true,
-      isPro: false,
-      isPhoneVerified: false // Mobile starts as unverified
+      isProfileComplete: true
     };
     onComplete(updatedUser);
   };
